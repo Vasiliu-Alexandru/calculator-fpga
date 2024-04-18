@@ -64,49 +64,49 @@ repeat(5)@(posedge clk);
 rst=1; //out of reset
 
 
-repeat(10)@(posedge clk);
+repeat(50)@(posedge clk);
 valid_in=1;
 a=412;
 b=3534;
-repeat(3)@(posedge clk);
+repeat(1)@(posedge clk);
 valid_in=0;
 
-repeat(10)@(posedge clk);
+repeat(50)@(posedge clk);
 valid_in=1;
 a=99999900;
 b=120;
-repeat(3)@(posedge clk);
+repeat(1)@(posedge clk);
 valid_in=0;
 
 
 
-repeat(10)@(posedge clk);
+repeat(50)@(posedge clk);
 valid_in=1;
 a=-2556;
 b=0;
-repeat(3)@(posedge clk);
+repeat(1)@(posedge clk);
 valid_in=0;
 
 
-repeat(10)@(posedge clk);
+repeat(50)@(posedge clk);
 valid_in=1;
 a=-364526534;
 b=-5346;
-repeat(3)@(posedge clk);
+repeat(1)@(posedge clk);
 valid_in=0;
 
-repeat(10)@(posedge clk);
+repeat(50)@(posedge clk);
 valid_in=1;
 a=169;
 b=13;
-repeat(3)@(posedge clk);
+repeat(1)@(posedge clk);
 valid_in=0;
 
-repeat(10)@(posedge clk);
+repeat(50)@(posedge clk);
 valid_in=1;
 a=168;
 b=13;
-repeat(3)@(posedge clk);
+repeat(1)@(posedge clk);
 valid_in=0;
 
 end
