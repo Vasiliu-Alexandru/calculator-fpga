@@ -17,20 +17,20 @@ module factorial(
     reg ovr_nxt,ovr_ff;	
     reg val_nxt,val_ff;
 
+    assign factorial = fact_temp;
 
     // assigns
     assign d_out=d_ff[27:0];
     assign ovrflow=ovr_ff;
     assign valid_out=val_ff;
-
     always @(*) begin
         //defaults
 	    d_nxt=d_ff;
 	    ovr_nxt=ovr_ff;
 	    val_nxt=val_ff;
 	
-	    d_nxt= (fact_temp<=99_999_999 && n>=0)?factorial[27:0]:  {28{1'b1}};
-	    ovr_nxt = (fact_temp<=99_999_999 && n>=0)? (1'b0):(1'b1);
+	    ovr_nxt = (n < 12 && n >= 0)? (1'b0):(1'b1);
+        d_nxt= (ovr_nxt)? {28{1'b1}} : factorial[27:0];
 	    val_nxt=valid_in;
     end
 
@@ -63,7 +63,7 @@ module factorial(
             end
     end
 
-  assign factorial = fact_temp;
+  
 
 
 endmodule
