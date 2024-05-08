@@ -1,5 +1,5 @@
 # calculator-fpga
-Un calculator numeric implementat in FPGA cu urmatoarele operatii: adunare, scadere, inmultire, impartire.
+Un calculator numeric implementat in FPGA cu urmatoarele operatii: adunare, scadere, inmultire, impartire, factorial, radical, ridicare la putere
 
 
 
@@ -7,7 +7,6 @@ Un calculator numeric implementat in FPGA cu urmatoarele operatii: adunare, scad
 
 
 TO-DO LIST
--impartire
--factorial
+
 -radical
--exponential
+-ridicare la putere
