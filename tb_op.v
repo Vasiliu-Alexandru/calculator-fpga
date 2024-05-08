@@ -1,6 +1,6 @@
 `timescale 1ns/1ps;
 
-module tb();
+module tb_op();
 
 reg signed [27:0] a,b;
 reg valid_in,clk,rst;
