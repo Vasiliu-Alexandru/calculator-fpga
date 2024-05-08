@@ -1,6 +1,6 @@
 `timescale 10ns/10ps;
 
-module tb();
+module tb_suma();
 
 reg signed [27:0] a,b;
 reg valid_in,clk,rst;
