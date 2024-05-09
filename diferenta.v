@@ -6,7 +6,7 @@ module diferenta(
  input rst,
  output valid_out,
  output ovrflow,   //in caz ca diferenta  depaseste 99.999.999 il setam pe 1
- output signed [27:0] d_out   //diferenta celor doua numere, daca ovrflow e pe 1 nu va fi 1111111111111111111111111111
+ output signed [27:0] d_out   //diferenta celor doua numere, daca ovrflow e pe 1 va fi 1111111111111111111111111111
 );
 
 suma instanta_suma (
