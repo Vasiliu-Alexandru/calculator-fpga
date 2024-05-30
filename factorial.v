@@ -1,69 +1,62 @@
 module factorial(
-    input signed [27:0] n,  //numar in C2 27b + 1 bit de semn
-    input valid_in,  	    //factorialul va fi calculat la primirea semnalului de valid de la FSM
-    input clk,
-    input rst,
-    output valid_out,
-    output ovrflow,         //in caz ca factorialul depaseste 99.999.999 il setam pe 1
-    output signed [27:0] d_out   //factorialul numarului, daca ovrflow e pe 1 va fi 11111111
+    input signed [27:0] n,        // 27-bit signed number with sign bit
+    input valid_in,               // Start calculation signal from FSM
+    input clk,                    // Clock signal
+    input rst,                    // Reset signal
+    output reg valid_out,         // Output valid signal
+    output reg ovrflow,           // Overflow flag
+    output reg signed [27:0] d_out // Factorial result, if overflow occurs set to all 1s
 );
 
-    wire [27:0] factorial;
-    reg [63:0] fact_temp;
-    integer i;
+    reg [63:0] fact_temp;         // Temporary register to hold factorial value
+    reg [27:0] i;                 // Loop variable
+    reg [1:0] state;              // State variable
 
-
-    reg  [27:0] d_nxt,d_ff;
-    reg ovr_nxt,ovr_ff;	
-    reg val_nxt,val_ff;
-
-    assign factorial = fact_temp;
-
-    // assigns
-    assign d_out=d_ff[27:0];
-    assign ovrflow=ovr_ff;
-    assign valid_out=val_ff;
-    always @(*) begin
-        //defaults
-	    d_nxt=d_ff;
-	    ovr_nxt=ovr_ff;
-	    val_nxt=val_ff;
-	
-	    ovr_nxt = (n < 12 && n >= 0)? (1'b0):(1'b1);
-        d_nxt= (ovr_nxt)? {28{1'b1}} : factorial[27:0];
-	    val_nxt=valid_in;
-    end
-
+    localparam IDLE = 2'b00,      // Idle state
+               CALC = 2'b01,      // Calculation state
+               DONE = 2'b10;      // Done state
 
     always @(posedge clk or negedge rst) begin
-
-
-        if(!rst) begin
-            d_ff<=0;
-	          ovr_ff<=0;
-	          val_ff<=0;
-  
+        if (!rst) begin
+            d_out <= 0;
+            ovrflow <= 0;
+            valid_out <= 0;
+            fact_temp <= 1;
+            i <= 0;
+            state <= IDLE;
         end else begin
-	        d_ff<=d_nxt;
-	        ovr_ff<=ovr_nxt;
-	        val_ff<=val_nxt;
-  
-        end
-
-    end
-
-    always @(n) begin
-            if (n == 0) begin
-                fact_temp = 1;
-            end else begin
-                fact_temp = 1;
-                for (i = n; i > 1; i = i - 1) begin
-                    fact_temp = fact_temp * i;
+            case (state)
+                IDLE: begin
+                    if (valid_in) begin
+                        if (n < 0 || n >= 12) begin
+                            // Set overflow flag if input is negative or too large
+                            ovrflow <= 1;
+                            d_out <= {28{1'b1}};
+                            valid_out <= 1;
+                            state <= DONE;
+                        end else begin
+                            // Start factorial calculation
+                            ovrflow <= 0;
+                            fact_temp <= 1;
+                            i <= n;
+                            state <= CALC;
+                        end
+                    end
                 end
-            end
-    end
-
-  
-
-
+                CALC: begin
+                    if (i > 1) begin
+                        fact_temp <= fact_temp * i;
+                        i <= i - 1;
+                    end else begin
+                        d_out <= fact_temp[27:0];
+                        state <= DONE;
+                    end
+                end
+                DONE: begin
+                    valid_out <= 1;
+                    state <= IDLE;
+                end
+            endcase
+        end
+    end 
 endmodule
