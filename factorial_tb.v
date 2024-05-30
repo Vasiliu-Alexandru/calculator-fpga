@@ -1,74 +1,73 @@
-`timescale 10ns/10ps;
+`timescale 1ns/1ps
 
 module factorial_tb();
 
-    reg signed [27:0] nr;
-    reg valid_in,clk,rst;
-    wire signed [27:0] rezultat;
-    wire valid_out,ovrflow;
+    reg signed [27:0] n;
+    reg valid_in;
+    reg clk;
+    reg rst;
 
-    factorial dut(
-        .n(nr),
+    wire valid_out;
+    wire ovrflow;
+    wire signed [27:0] d_out;
+
+    factorial uut (
+        .n(n),
         .valid_in(valid_in),
         .clk(clk),
         .rst(rst),
         .valid_out(valid_out),
         .ovrflow(ovrflow),
-        .d_out(rezultat)
+        .d_out(d_out)
     );
 
     initial begin
-        nr=0;
-        valid_in=0;
-        clk=0;
-        rst=1;
-
-        repeat(2)@(posedge clk);
-        rst=0; //entering reset
-        repeat(5)@(posedge clk);
-        rst=1; //out of reset
-
-        repeat(10)@(posedge clk);
-        valid_in=1;
-        nr=5;
-        repeat(3)@(posedge clk);
-        valid_in=0;
-        
-        repeat(10)@(posedge clk);
-        valid_in=1;
-        nr=8;
-        repeat(3)@(posedge clk);
-        valid_in=0;
-        
-        repeat(10)@(posedge clk);
-        valid_in=1;
-        nr=0;
-        repeat(3)@(posedge clk);
-        valid_in=0;
-        
-        repeat(10)@(posedge clk);
-        valid_in=1;
-        nr=-2;
-        repeat(3)@(posedge clk);
-        valid_in=0;
-        
-        repeat(10)@(posedge clk);
-        valid_in=1;
-        nr=4;
-        repeat(3)@(posedge clk);
-        valid_in=0;
-        
-        repeat(10)@(posedge clk);
-        valid_in=1;
-        nr=45;
-        repeat(3)@(posedge clk);
-        valid_in=0;
-        
+        clk = 0;
+        forever #5 clk = ~clk;
     end
 
+    initial begin
+        rst = 1;
+        valid_in = 0;
+        n = 0;
 
-    always begin
-        #1 clk=~clk;
+        rst = 0;
+        #10;
+        rst = 1;
+        #10;
+
+        n = 5;
+        valid_in = 1;
+        #10;
+        valid_in = 0;
+
+        wait (valid_out);
+        #10;
+
+        n = 15;
+        valid_in = 1;
+        #10;
+        valid_in = 0;
+
+        wait (valid_out);
+        #10;
+
+        n = -1;
+        valid_in = 1;
+        #10;
+        valid_in = 0;
+
+        wait (valid_out);
+        #10;
+
+        n = 6;
+        valid_in = 1;
+        #10;
+        valid_in = 0;
+
+        wait (valid_out);
+        #10;
+
     end
 
 endmodule
