@@ -1,23 +1,23 @@
-//Synthesisable Design for Finding Square root of a number.
 module square_root
     #(parameter N = 28)
-    (   input Clock,  //Clock
-        input reset,  //Asynchronous active high reset.      
-        input signed [N-1:0] num_in,   //this is the number for which we want to find square root.
-        output reg done,     //This signal goes high when output is ready
-        output reg [N/2-1:0] sq_root,  //square root of 'num_in'
+    (   input clk,  
+        input rst,   
+		input valid_in,
+        input signed [N-1:0] num_in,  
+        output reg done,     
+        output reg [N/2-1:0] sq_root, 
         output reg eroare
     );
 
-    reg [N-1:0] a;   //original input.
-    reg [N/2+1:0] left,right;     //input to adder/sub.r-remainder.
+    reg [N-1:0] a;
+    reg [N/2+1:0] left,right;    
     reg signed [N/2+1:0] r;
-    reg [N/2-1:0] q;    //result.
-    integer i;   //index of the loop. 
+    reg [N/2-1:0] q;  
+    integer i;
 
-    always @(posedge Clock or negedge reset) 
+    always @(posedge clk or negedge rst) 
     begin
-        if (!reset) begin   //reset the variables.
+        if (!rst) begin 
             done <= 0;
             sq_root <= 0;
             i = 0;
@@ -29,38 +29,37 @@ module square_root
             eroare = 0;
         end    
         else begin
-            if(num_in < 0) begin
+            if((num_in < 0) && valid_in) begin
                 eroare <= 1;
             end
             else begin
-                //Before we start the first clock cycle get the 'input' to the variable 'a'.
-                if(i == 0) begin  
+                if(i == 0 && valid_in) begin  
                     a = num_in;
-                    done <= 0;    //reset 'done' signal.
-                    i = i+1;   //increment the loop index.
+                    done <= 0;    
+                    i = i+1;   
                 end
-                else if(i < N/2) begin //keep incrementing the loop index.
+                else if(i < N/2) begin 
                     i = i+1;  
                 end
-                //These statements below are derived from the block diagram.
                 right = {q,r[N/2+1],1'b1};
                 left = {r[N/2-1:0], a[N-1:N-2]};
-                a = {a[N-3:0], 2'b0};  //shifting left by 2 bit.
-                if ( r[N/2+1] == 1)    //add or subtract as per this bit.
+                a = {a[N-3:0], 2'b0};  
+                if ( r[N/2+1] == 1)   
                     r = left + right;
                 else
                     r = left - right;
                 q = {q[N/2-2:0], ~r[N/2+1]};
-                if(i == N/2) begin    //This means the max value of loop index has reached. 
-                    done <= 1;    //make 'done' high because output is ready.
-                    i = 0; //reset loop index for beginning the next cycle.
-                    sq_root <= q;   //assign 'q' to the output port.
-                    //reset other signals for using in the next cycle.
+                if(i == N/2) begin   
+                    done <= 1;   
+                    i = 0; 
+                    sq_root <= q;  
                     left = 0;
                     right = 0;
                     r = 0;
                     q = 0;
-                end
+                end else begin
+  	  			    done <= 0;
+				end
             end
         end   
     end
