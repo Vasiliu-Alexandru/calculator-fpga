@@ -22,7 +22,6 @@ module toplevel(
   wire [7:0] select;
   wire [4:0] c_s;
   reg [3:0] hex_sel;
-  // assign state=~c_s;
   assign digits = ~hex_sel;
   wire [27:0] a, b, data_out, afisare;
 
@@ -66,16 +65,6 @@ module toplevel(
     .posedge_detected(cifra_noua_sync) // 50MHz
   );
 
-/*
-VGA u5(
-.clock(clk_50Mhz),
-.switch(),
-.disp_RGB({red,green,blue}),
-.hsync(hsync),
-.vsync(vsync)
-
-);
-*/
 
 vga_display
 (
@@ -89,10 +78,6 @@ vga_display
    .ht(ht),
    .mil(mil),
    .tmil(tmil),
-   
-                 //       tmil ,  mil, ht , tt,  th, hun, tens,uts
-   
-   
    .hsync(hsync),
    .vsync(vsync),
    .red(red),
