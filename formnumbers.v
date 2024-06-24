@@ -116,14 +116,14 @@ always @(posedge clk, negedge rst) begin
 		rez_reg<=0;
 		select_reg<=0;
 		afisare_reg<=0;
-		end else begin
-	state_reg<=state_nxt;
-	output1_reg<=output1_nxt;
-	output2_reg<=output2_nxt;
-	cnt_reg<=cnt_nxt;
-	rez_reg<=rez_nxt;
-	select_reg<=select_nxt;
-	afisare_reg<=afisare_nxt;
+	end else begin
+		state_reg<=state_nxt;
+		output1_reg<=output1_nxt;
+		output2_reg<=output2_nxt;
+		cnt_reg<=cnt_nxt;
+		rez_reg<=rez_nxt;
+		select_reg<=select_nxt;
+		afisare_reg<=afisare_nxt;
 	end
 end
 
