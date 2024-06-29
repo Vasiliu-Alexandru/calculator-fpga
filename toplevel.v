@@ -15,7 +15,7 @@ module toplevel(
   output blue
 );
   reg [27:0] data_out_ff, data_out_nxt;
-
+  wire overflow;
   wire [4:0] data;
   wire cifra_noua;
   wire cifra_noua_sync;
@@ -68,6 +68,8 @@ module toplevel(
 
 vga_display
 (
+   .select(select),
+   .overflow(overflow),
    .clk(clk_50Mhz),
    .reset(rst),
    .uni(uts),
@@ -78,6 +80,7 @@ vga_display
    .ht(ht),
    .mil(mil),
    .tmil(tmil),
+   .negative(sign_out),
    .hsync(hsync),
    .vsync(vsync),
    .red(red),
@@ -96,7 +99,8 @@ vga_display
     .c_s(c_s),
     .afisare(afisare),
     .sign_out(sign_out),
-    .led(led)
+    .led(led),
+	.overflow(overflow),
   );
 
   wire [27:0] dat;
