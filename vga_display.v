@@ -1,4 +1,6 @@
 module vga_display (
+	input [6:0] select,
+	input overflow,
     input wire clk,
     input wire reset,
     input [3:0] uni,
@@ -10,7 +12,8 @@ module vga_display (
     input [3:0] ht,
     input [3:0] mil,
     input [3:0] tmil,
-
+	input negative,
+	input [4:0] state,
     output wire hsync,
     output wire vsync,
     output wire red,
@@ -92,7 +95,7 @@ end
 assign hsync = (h_count >= H_ACTIVE + H_FRONT) && (h_count < H_ACTIVE + H_FRONT + H_SYNC);
 assign vsync = (v_count >= V_ACTIVE + V_FRONT) && (v_count < V_ACTIVE + V_FRONT + V_SYNC);
 
-reg [FONT_W-1:0] char_rom [0:9][0:FONT_H-1];
+reg [FONT_W-1:0] char_rom [0:10][0:FONT_H-1];
 initial begin
 //0
     char_rom[0][ 0] = 16'b0000000000000000;
@@ -264,6 +267,25 @@ initial begin
     char_rom[9][13] = 16'b0001111111110000;
     char_rom[9][14] = 16'b0000000000000000;
     char_rom[9][15] = 16'b0000000000000000;
+	
+	char_rom[10][ 0] = 16'b0000000000000000;
+    char_rom[10][ 1] = 16'b0000000000000000;
+    char_rom[10][ 2] = 16'b0000000000000000;
+    char_rom[10][ 3] = 16'b0000000000000000;
+    char_rom[10][ 4] = 16'b0000000000000000;
+    char_rom[10][ 5] = 16'b0000000000000000;
+    char_rom[10][ 6] = 16'b0000000000000000;
+    char_rom[10][ 7] = 16'b0111111111111100;
+    char_rom[10][ 8] = 16'b0111111111111100;
+    char_rom[10][ 9] = 16'b0000000000000000;
+    char_rom[10][10] = 16'b0000000000000000;
+    char_rom[10][11] = 16'b0000000000000000;
+    char_rom[10][12] = 16'b0000000000000000;
+    char_rom[10][13] = 16'b0000000000000000;
+    char_rom[10][14] = 16'b0000000000000000;
+    char_rom[10][15] = 16'b0000000000000000;
+
+	
 
 end
 
@@ -283,26 +305,49 @@ always @(posedge clk_25MHz) begin
 	
     if (display_area) begin
         if ((v_count >= POS_Y && v_count < POS_Y+FONT_H) /*&& (h_count>=OFFSET_X)*/) begin
-            case ((h_count - OFFSET_X) / FONT_W)
+		
+			if(overflow) begin
+			    case ((h_count - OFFSET_X) / FONT_W)
+				0: char_line <=0 ;
+				1: char_line <=char_rom[10][v_count - POS_Y]; 
+				2: char_line <=char_rom[10][v_count - POS_Y]; 
+				3: char_line <=char_rom[10][v_count - POS_Y];
+				4: char_line <=char_rom[10][v_count - POS_Y];
+				5: char_line <=char_rom[10][v_count - POS_Y]; 
+				6: char_line <=char_rom[10][v_count - POS_Y]; 
+				7: char_line <=char_rom[10][v_count - POS_Y];
+				8: char_line <=char_rom[10][v_count - POS_Y];
 				
-			    0: char_line <= (tmil_r<=9)?char_rom[tmil_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
-				1: char_line <= (mil_r<=9)?char_rom[mil_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
-				2: char_line <= (ht_r<=9)?char_rom[ht_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
-				3: char_line <= (tt_r<=9)?char_rom[tt_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
-				4: char_line <= (tho_r<=9)?char_rom[tho_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
-				5: char_line <= (hun_r<=9)?char_rom[hun_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
-				6: char_line <= (ten_r<=9)?char_rom[ten_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
-				7: char_line <= (uni_r<=9)?char_rom[uni_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
-				
-
                 default: char_line <= 0;
             endcase
+			
+			end else begin
+            case ((h_count - OFFSET_X) / FONT_W)
+				0: char_line<= ~negative?char_rom[10][v_count - POS_Y]:0;
+				1: char_line <= (tmil_r<=9)?char_rom[tmil_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
+				2: char_line <= (mil_r<=9)?char_rom[mil_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
+				3: char_line <= (ht_r<=9)?char_rom[ht_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
+				4: char_line <= (tt_r<=9)?char_rom[tt_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
+				5: char_line <= (tho_r<=9)?char_rom[tho_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
+				6: char_line <= (hun_r<=9)?char_rom[hun_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y]; 
+				7: char_line <= (ten_r<=9)?char_rom[ten_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
+				8: char_line <= (uni_r<=9)?char_rom[uni_r][v_count - POS_Y]:char_rom[0][v_count - POS_Y];
+				
+                default: char_line <= 0;
+            endcase
+			end
+			
+			
         end else begin
             char_line <= 0;
         end
+		
+		
     end else begin
         char_line <= 0;
     end
+	
+	
 end
 
 wire pixel = char_line[FONT_W-1 - (h_count % FONT_W)];
