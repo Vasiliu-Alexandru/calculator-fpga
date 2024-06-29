@@ -1,6 +1,6 @@
 module vga_display (
-	input [6:0] select,
-	input overflow,
+    input [6:0] select,
+    input overflow,
     input wire clk,
     input wire reset,
     input [3:0] uni,
@@ -8,12 +8,12 @@ module vga_display (
     input [3:0] hun,
     input [3:0] tho,
 	
-	input [3:0] tt,
+    input [3:0] tt,
     input [3:0] ht,
     input [3:0] mil,
     input [3:0] tmil,
-	input negative,
-	input [4:0] state,
+    input negative,
+    input [4:0] state, //not used
     output wire hsync,
     output wire vsync,
     output wire red,
