@@ -20,7 +20,6 @@ set_global_assignment -name SDC_FILE example1.sdc
 
 set_global_assignment -name TOP_LEVEL_ENTITY toplevel
 
-
 set_location_assignment PIN_23  -to clk_50Mhz
 set_location_assignment PIN_25  -to rst
 set_location_assignment PIN_119  -to ps2_clk
@@ -30,12 +29,6 @@ set_location_assignment PIN_133  -to digits[0]
 set_location_assignment PIN_135  -to digits[1]
 set_location_assignment PIN_136  -to digits[2]
 set_location_assignment PIN_137  -to digits[3]
-
-
-set_location_assignment PIN_65  -to digits2[0]
-set_location_assignment PIN_58  -to digits2[1]
-set_location_assignment PIN_52  -to digits2[2]
-set_location_assignment PIN_30  -to digits2[3]
 
 
 
@@ -49,18 +42,6 @@ set_location_assignment PIN_124 -to segments[6]
 set_location_assignment PIN_127 -to segments[7]
 
 
-set_location_assignment PIN_39 -to segments2[0]
-set_location_assignment PIN_32 -to segments2[1]
-set_location_assignment PIN_54 -to segments2[2]
-set_location_assignment PIN_46 -to segments2[3]
-set_location_assignment PIN_43 -to segments2[4]
-set_location_assignment PIN_34 -to segments2[5]
-set_location_assignment PIN_50 -to segments2[6]
-set_location_assignment PIN_60 -to segments2[7]
-
-
-
-
 set_location_assignment PIN_84 -to a_t[3]
 set_location_assignment PIN_85 -to a_t[2]
 set_location_assignment PIN_86 -to a_t[1]
@@ -71,7 +52,6 @@ set_location_assignment PIN_103 -to vsync
 set_location_assignment PIN_106 -to red
 set_location_assignment PIN_105 -to green
 set_location_assignment PIN_104 -to blue
-
 
 
 load_package flow
